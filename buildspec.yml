@@ -3,7 +3,7 @@ version: 0.2
 env:
   parameter-store:
     AWS_ACCOUNT_ID: "/2048/ACCOUNT_ID"
-    AWS_DEFAULT_REGION: "2048/REGION"
+    AWS_DEFAULT_REGION: "/2048/REGION"
 
 
   variables:

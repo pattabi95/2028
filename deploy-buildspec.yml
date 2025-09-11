@@ -28,14 +28,14 @@ phases:
       - aws --version
       - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name 2048-cluster
       - kubectl get nodes
-      - IMAGE_URI=$(cat imagedefenitions.json | jq -r '.[0].imageUri')
+      - IMAGE_URI=$(cat imagedefinitions.json | jq -r '.[0].imageUri')
       - echo "Image to deploy: IMAGE_URI=$IMAGE_URI"
   
   build: 
     commands: 
      - echo Deploying to EKS...
-      - kubectl set image deployment/2048-game 2048-game=$IMAGE_URI --namespace default || true
-      - kubectl apply -f k8s/manifests/ --namespace default
+     - kubectl set image deployment/2048-game 2048-game=$IMAGE_URI --namespace default || true
+     - kubectl apply -f k8s/manifests/ --namespace default
 
 artifacts:
   files:

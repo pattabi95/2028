@@ -36,4 +36,4 @@ phases:
 artifacts:
   files:
     - imagedefinitions.json
-  base-directory: build_artifacts
+  base-directory: build_artifacts 

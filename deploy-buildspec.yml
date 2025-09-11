@@ -35,7 +35,7 @@ phases:
     commands: 
      - echo Deploying to EKS...
       - kubectl set image deployment/2048-game 2048-game=$IMAGE_URI --namespace default || true
-      - kubectl apply -f k8s/ --namespace default
+      - kubectl apply -f k8s/manifests/ --namespace default
 
 artifacts:
   files:

@@ -1,0 +1,42 @@
+version 0.2
+
+env:
+  parameter-store:
+    AWS_ACCOUNT_ID: "/2048/ACCOUNT_ID"
+    AWS_DEFAULT_REGION: "/2048/REGION"
+
+phases:
+  install: 
+    commands: 
+      - echo Installing kubectl and jq if needed...
+      - |
+        if ! command -v kubectl &> /dev/null 2>&1; then
+          echo "kubectl not found, installing..."
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv ./kubectl /usr/local/bin
+        fi
+      - |
+        if ! command -v jq &> /dev/null 2>&1; then
+          echo "jq not found, installing..."
+          yum install -y jq || true
+        fi
+  
+  pre_build:
+    commands: 
+      - echo Starting deploy phase...
+      - aws --version
+      - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name 2048-cluster
+      - kubectl get nodes
+      - IMAGE_URI=$(cat imagedefenitions.json | jq -r '.[0].imageUri')
+      - echo "Image to deploy: IMAGE_URI=$IMAGE_URI"
+  
+  build: 
+    commands: 
+     - echo Deploying to EKS...
+      - kubectl set image deployment/2048-game 2048-game=$IMAGE_URI --namespace default || true
+      - kubectl apply -f k8s/ --namespace default
+
+artifacts:
+  files:
+    - '**/*'
